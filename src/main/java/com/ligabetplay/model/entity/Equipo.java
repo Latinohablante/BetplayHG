@@ -20,12 +20,21 @@ public class Equipo {
         this.ciudad = ciudad;
         this.estadio = estadio;
         this.entrenador = entrenador;
-    }   
+    }
     public Equipo() {
         jugadores = new ArrayList<Jugador>();
         partidos = new ArrayList<Partido>();
 
     }
+
+    public void addJugador(Jugador jugador) {
+        jugadores.add(jugador);
+    }
+
+    public void removeJugador(Jugador jugador) {
+        jugadores.remove(jugador);
+    }
+
     public Integer getId() {
         return id;
     }

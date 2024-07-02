@@ -56,11 +56,11 @@ public class viewEquipos {
                                 System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
                                 continue;
                             }
-                            boolean flag = controlador.checkExistence(key);
+                            boolean flag = controlador.checkExistenceEquipo(key);
 
                             while (flag) {
                                 //
-                                String nameTeam = controlador.getNombre(key);
+                                String nameTeam = controlador.getNombreEquipo(key);
                                 System.out.println("\t");
                                 System.out.println(MessageFormat.format("       {0}", nameTeam.toUpperCase()));
                                 System.out.println("___________________________");
@@ -78,7 +78,7 @@ public class viewEquipos {
                                             System.out.println("\t");  
                                             System.out.print("New team name: ");
                                             String newName = scanner.nextLine();
-                                            controlador.setNombre(key, newName);
+                                            controlador.setNombreEquipo(key, newName);
                                             break;
                                         case 2:
                                             System.out.println("\t"); 
