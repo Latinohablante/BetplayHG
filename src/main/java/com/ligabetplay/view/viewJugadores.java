@@ -1,7 +1,10 @@
 package com.ligabetplay.view;
 
-import java.text.MessageFormat;
-import java.util.Scanner;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 import com.ligabetplay.controller.ControllerDate;
 import com.ligabetplay.controller.Keyunique;
@@ -11,49 +14,26 @@ import com.ligabetplay.model.entity.Jugador;
 public class viewJugadores {
     public static void gestorJugadores() {
         ControllerDate controlador = new ControllerDate();
-        Scanner scanner = new Scanner(System.in);
-        // Menú de opciones
         int opcion = 0;
         while (opcion != 6) {
             try {
-                System.out.println("\t");
-                System.out.println("  Player Administration");
-                System.out.println("___________________________");
-                System.out.println("1. Create Player");
-                System.out.println("2. Update Player");
-                System.out.println("3. Search Player");
-                System.out.println("4. Remove Player");
-                System.out.println("5. Show Players");
-                System.out.println("6. Exit.");
-                System.out.println("===========================");
-                System.out.print("-> Choose an option: ");
-                opcion = scanner.nextInt();
-                scanner.nextLine(); // Limpiar el buffer
+                String[] options = {"Crear Jugador", "Modificar Jugador", "Buscar Jugador", "Eliminar Jugador", "Mostrar Jugadores", "Salir"};
+                opcion = JOptionPane.showOptionDialog(null, "Administración de Jugadores\nSeleccione una opción:", "Menu Jugadores",
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
 
                 switch (opcion) {
-                    case 1:
-                        // Generamos llave unica
+                    case 0:
                         int keyJ = Keyunique.generateUniqueKeyJ(controlador.jugadores);
-                        System.out.print("Nombre: ");
-                        String nombre = scanner.nextLine();
-                        System.out.print("Edad: ");
-                        int edad = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.print("Posición: ");
-                        String posicion = scanner.nextLine();
-                        System.out.print("Nacionalidad: ");
-                        String nacionalidad = scanner.nextLine();
-                        System.out.print("Número de Camiseta: ");
-                        int numeroCamiseta = scanner.nextInt();
-                        scanner.nextLine();
-                        System.out.print("Equipo: ");
-                        String nombreEquipo = scanner.nextLine();
+                        String nombre = JOptionPane.showInputDialog(null, "Nombre del jugador:");
+                        int edad = Integer.parseInt(JOptionPane.showInputDialog(null, "Edad del jugador:"));
+                        String posicion = JOptionPane.showInputDialog(null, "Posición del jugador:");
+                        String nacionalidad = JOptionPane.showInputDialog(null, "Nacionalidad del jugador:");
+                        int numeroCamiseta = Integer.parseInt(JOptionPane.showInputDialog(null, "Número de camiseta del jugador:"));
+                        String nombreEquipo = JOptionPane.showInputDialog(null, "Nombre del equipo:");
                         Integer keyEquipo = controlador.findKeyEquipo(nombreEquipo);
-                        
+
                         if (keyEquipo == null) {
-                            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                            System.out.println("¡No se encontró un equipo con ese nombre!");
-                            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                            JOptionPane.showMessageDialog(null, "¡No se encontró un equipo con ese nombre!", "Error", JOptionPane.ERROR_MESSAGE);
                             break;
                         }
 
@@ -62,90 +42,56 @@ public class viewJugadores {
                         controlador.jugadores.put(keyJ, jugador);
                         equipo.addJugador(jugador); // Método para añadir jugador al equipo
                         break;
-                    case 2:
+                    case 1:
                         if (controlador.jugadores.size() > 0) {
-                            System.out.print("Ingrese el nombre del jugador que quiere modificar: ");
-                            String nombreJugador = scanner.nextLine();
+                            String nombreJugador = JOptionPane.showInputDialog(null, "Ingrese el nombre del jugador a modificar:");
                             Integer key = controlador.findKeyJugador(nombreJugador);
                             if (key == null) {
-                                System.out.println("\t");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                System.out.println("¡No se encontró un jugador con ese nombre!");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                JOptionPane.showMessageDialog(null, "¡No se encontró un jugador con ese nombre!", "Error", JOptionPane.ERROR_MESSAGE);
                                 continue;
                             }
                             boolean flag = controlador.checkExistenceJugador(key);
-
                             while (flag) {
                                 String namePlayer = controlador.getNombreJugador(key);
-                                System.out.println("\t");
-                                System.out.println(MessageFormat.format("       {0}", namePlayer.toUpperCase()));
-                                System.out.println("___________________________");
-                                System.out.println("1. Editar nombre");
-                                System.out.println("2. Editar edad");
-                                System.out.println("3. Editar posición");
-                                System.out.println("4. Editar nacionalidad");
-                                System.out.println("5. Editar número de camiseta");
-                                System.out.println("6. Salir");
-                                System.out.println("=============================");
-                                System.out.print("Elija una opción: ");
-                                int choice2 = scanner.nextInt();
-                                scanner.nextLine(); // Consume newline
+                                String[] editOptions = {"Editar nombre", "Editar edad", "Editar posición", "Editar nacionalidad", "Editar número de camiseta", "Salir"};
+                                int choice2 = JOptionPane.showOptionDialog(null, "Jugador: " + namePlayer.toUpperCase() + "\nSeleccione una opción:", "Modificar Jugador",
+                                        JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, editOptions, editOptions[0]);
                                 switch (choice2) {
-                                    case 1:
-                                        System.out.println("\t");
-                                        System.out.print("New player name: ");
-                                        String newName = scanner.nextLine();
+                                    case 0:
+                                        String newName = JOptionPane.showInputDialog(null, "Nuevo nombre del jugador:");
                                         controlador.setNombreJugador(key, newName);
                                         break;
-                                    case 2:
-                                        System.out.println("\t");
-                                        System.out.print("New age: ");
-                                        int newAge = scanner.nextInt();
-                                        scanner.nextLine();
+                                    case 1:
+                                        int newAge = Integer.parseInt(JOptionPane.showInputDialog(null, "Nueva edad del jugador:"));
                                         controlador.setEdadJugador(key, newAge);
                                         break;
-                                    case 3:
-                                        System.out.println("\t");
-                                        System.out.print("New position: ");
-                                        String newPosition = scanner.nextLine();
+                                    case 2:
+                                        String newPosition = JOptionPane.showInputDialog(null, "Nueva posición del jugador:");
                                         controlador.setPosicionJugador(key, newPosition);
                                         break;
-                                    case 4:
-                                        System.out.println("\t");
-                                        System.out.print("New nationality: ");
-                                        String newNationality = scanner.nextLine();
+                                    case 3:
+                                        String newNationality = JOptionPane.showInputDialog(null, "Nueva nacionalidad del jugador:");
                                         controlador.setNacionalidadJugador(key, newNationality);
                                         break;
-                                    case 5:
-                                        System.out.println("\t");
-                                        System.out.print("New shirt number: ");
-                                        int newNumber = scanner.nextInt();
-                                        scanner.nextLine();
+                                    case 4:
+                                        int newNumber = Integer.parseInt(JOptionPane.showInputDialog(null, "Nuevo número de camiseta del jugador:"));
                                         controlador.setNumeroCamisetaJugador(key, newNumber);
                                         break;
-                                    case 6:
+                                    case 5:
                                         flag = false;
                                         break;
                                     default:
-                                        System.out.println("\t");
-                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                        System.out.println("¡Entrada no válida, elija un número entre 1 y 6!");
-                                        System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                        JOptionPane.showMessageDialog(null, "¡Entrada no válida, elija una opción entre 1 y 6!", "Error", JOptionPane.ERROR_MESSAGE);
                                         break;
                                 }
                             }
                         } else {
-                            System.out.println("\t");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                            System.out.println("¡Aún no hay jugadores!");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
+                            JOptionPane.showMessageDialog(null, "¡No hay jugadores registrados!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
-                    case 3:
+                    case 2:
                         if (controlador.jugadores.size() > 0) {
-                            System.out.print("Ingrese el nombre del jugador que quiere buscar: ");
-                            String nombreJugador = scanner.nextLine();
+                            String nombreJugador = JOptionPane.showInputDialog(null, "Ingrese el nombre del jugador a buscar:");
                             Integer key = controlador.findKeyJugador(nombreJugador);
                             if (key != null) {
                                 Jugador findPlayer = controlador.jugadores.get(key);
@@ -155,77 +101,64 @@ public class viewJugadores {
                                 String nacionalidadP = findPlayer.getNacionalidad();
                                 int numeroCamisetaP = findPlayer.getNumeroCamiseta();
                                 Equipo equipoP = findPlayer.getEquipo();
-                                System.out.println("\n");
-                                System.out.println("______________________________________________");
-                                System.out.println("\tName:          \t" + nombreP);
-                                System.out.println("\tAge:           \t" + edadP);
-                                System.out.println("\tPosition:      \t" + posicionP);
-                                System.out.println("\tNationality:   \t" + nacionalidadP);
-                                System.out.println("\tShirt Number:  \t" + numeroCamisetaP);
-                                System.out.println("\tTeam:          \t" + equipoP.getNombre());
-                                System.out.println("==============================================");
-
+                                JOptionPane.showMessageDialog(null, String.format(
+                                        "Nombre: %s\nEdad: %d\nPosición: %s\nNacionalidad: %s\nNúmero de camiseta: %d\nEquipo: %s",
+                                        nombreP, edadP, posicionP, nacionalidadP, numeroCamisetaP, equipoP.getNombre()), "Jugador Encontrado", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                System.out.println("\t");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                System.out.println("¡No se encontró un jugador con ese nombre!");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                JOptionPane.showMessageDialog(null, "¡No se encontró un jugador con ese nombre!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            System.out.println("\t");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                            System.out.println("¡Aún no hay jugadores!");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                            continue;
+                            JOptionPane.showMessageDialog(null, "¡No hay jugadores registrados!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
-                    case 4:
+                    case 3:
                         if (controlador.jugadores.size() > 0) {
-                            System.out.print("Ingrese el nombre del jugador que quiere eliminar: ");
-                            String nameJugador = scanner.nextLine();
+                            String nameJugador = JOptionPane.showInputDialog(null, "Ingrese el nombre del jugador a eliminar:");
                             Integer key = controlador.findKeyJugador(nameJugador);
-
                             if (key != null) {
                                 Jugador jugadorAEliminar = controlador.jugadores.get(key);
                                 jugadorAEliminar.getEquipo().removeJugador(jugadorAEliminar); // Método para eliminar jugador del equipo
                                 controlador.removePlayer(key);
                             } else {
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                                System.out.println("¡No se encontró un jugador con ese nombre!");
-                                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+                                JOptionPane.showMessageDialog(null, "¡No se encontró un jugador con ese nombre!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } else {
-                            System.out.println("\t");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                            System.out.println("¡Aún no hay jugadores!");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
+                            JOptionPane.showMessageDialog(null, "¡No hay jugadores registrados!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        break;
+                    case 4:
+                        if (controlador.jugadores.size() != 0) {
+                            showPlayersTable(controlador);
+                        } else {
+                            JOptionPane.showMessageDialog(null, "¡No hay jugadores registrados!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                         break;
                     case 5:
-                        if (controlador.jugadores.size() != 0) {
-                            controlador.showPlayers();
-                        } else {
-                            System.out.println("\t");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                            System.out.println("¡Aún no hay jugadores!");
-                            System.out.println("@@@@@@@@@@@@@@@@@@");
-                        }
-                        break;
-                    case 6:
-                        System.out.println("Saliendo...");
                         break;
                     default:
-                        System.out.println("@@@@@@@@@@@@@@@@@");
-                        System.out.println("Opción no válida.");
-                        System.out.println("@@@@@@@@@@@@@@@@@");
+                        JOptionPane.showMessageDialog(null, "Opción no válida.", "Error", JOptionPane.ERROR_MESSAGE);
                         break;
                 }
             } catch (Exception e) {
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                System.out.println("Formato invalido. Input a nùmber!" + e);
-                System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                scanner.nextLine();
+                JOptionPane.showMessageDialog(null, "Formato inválido. Por favor ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private static void showPlayersTable(ControllerDate controlador) {
+        String[] columns = {"ID", "Nombre", "Edad", "Posición", "Nacionalidad", "Número de camiseta", "Equipo"};
+        DefaultTableModel model = new DefaultTableModel(columns, 0);
+
+        controlador.jugadores.values().forEach(jugador -> {
+            Object[] row = {jugador.getId(), jugador.getNombre(), jugador.getEdad(), jugador.getPosicion(), jugador.getNacionalidad(), jugador.getNumeroCamiseta(), jugador.getEquipo().getNombre()};
+            model.addRow(row);
+        });
+
+        JTable table = new JTable(model);
+        JScrollPane scrollPane = new JScrollPane(table);
+        JPanel panel = new JPanel();
+        panel.add(scrollPane);
+
+        JOptionPane.showMessageDialog(null, panel, "Lista de Jugadores", JOptionPane.PLAIN_MESSAGE);
     }
 }

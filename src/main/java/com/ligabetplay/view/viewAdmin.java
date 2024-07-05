@@ -1,41 +1,32 @@
 package com.ligabetplay.view;
 
-import java.text.MessageFormat;
 import java.util.List;
-import java.util.Scanner;
+
+import javax.swing.JOptionPane;
 
 import com.ligabetplay.model.entity.Permiso;
 
 public class viewAdmin {
 
-    public static void  showMenu(List<Permiso> permisos){
-        Scanner scanner = new Scanner(System.in);
-            // Menú de opciones
-            int opcion = 0;
-            while (opcion != 17) {
-                try{
-                    int contador = 1;
-                    String indez = "";
+    public static void showMenu(List<Permiso> permisos) {
+        int opcion = 0;
+        while (opcion != permisos.size() + 1) {
+            try {
+                StringBuilder menu = new StringBuilder("\n             Menú Administration\n");
+                menu.append("____________________________________________\n");
+                for (int i = 0; i < permisos.size(); i++) {
+                    Permiso item = permisos.get(i);
+                    menu.append(String.format("%d. %s\n", i + 1, item.getDescripcion()));
+                }
+                menu.append(String.format("%d. Salir\n", permisos.size() + 1));
+                menu.append("=============================================\n");
+                menu.append("Seleccione una opción:");
 
-                    /*----------Encabezado--------------- */
-                    //System.out.println("____________________________________________");
-                    System.out.println("\n             Menú Administration");
-                    System.out.println("____________________________________________");
-                    for (Permiso item : permisos) {
-                        indez += contador + ".";
-                        System.out.printf("| %5s |%s.%n", indez, item.getDescripcion());
-                        //System.out.printf("%-5s %-25s %s%n", contador, item.getDescripcion());
-                        contador++;
-                        indez = "";
-                    }
-                    /*-----------Footer------------------ */
-                    System.out.println(MessageFormat.format("|   {0}. |Exit.", contador));
-                    System.out.println("=============================================");
-                    System.out.print("-> Choose an option: ");
-                    
-                    opcion = scanner.nextInt();
-                    scanner.nextLine(); // Limpiar el buffer
-                    contador = 1;
+                String input = JOptionPane.showInputDialog(null, menu.toString(), "Menú Administración", JOptionPane.PLAIN_MESSAGE);
+                if (input == null) break; // Si el usuario cierra el cuadro de diálogo
+                opcion = Integer.parseInt(input);
+
+                if (opcion > 0 && opcion <= permisos.size() + 1) {
                     switch (opcion) {
                         case 1:
                             viewEquipos.gestorEquipos();
@@ -44,29 +35,23 @@ public class viewAdmin {
                             viewJugadores.gestorJugadores();
                             break;
                         case 3:
-
-                            //buscarTarea(archivo, tareaBuscar);
+                            // buscarTarea(archivo, tareaBuscar);
                             break;
                         case 4:
-
-                            //eliminarTarea(archivo, tareaEliminar);
+                            // eliminarTarea(archivo, tareaEliminar);
                             break;
                         case 17:
                             break;
                         default:
-                            System.out.println("@@@@@@@@@@@@@@@@@");
-                            System.out.println("Opción no válida.");
-                            System.out.println("@@@@@@@@@@@@@@@@@");
+                            JOptionPane.showMessageDialog(null, "Opción no válida.", "Error", JOptionPane.ERROR_MESSAGE);
                             break;
                     }
-                } catch (Exception e) {
-                    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    System.out.println("Formato invalido. Input a nùmber!");
-                    System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-                    scanner.nextLine();
-                } 
+                } else {
+                    JOptionPane.showMessageDialog(null, "Opción no válida.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Formato inválido. Por favor ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
-        
     }
 }
-
